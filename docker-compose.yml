@@ -1,0 +1,47 @@
+services:
+  jellystat-db:
+    image: postgres:18
+    container_name: jellystat-db
+    restart: unless-stopped
+    shm_size: "1gb"
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_NAME:-jellystat}
+    volumes:
+      - jellystat-db:/var/lib/postgresql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready --dbname=$${POSTGRES_DB} --username=$${POSTGRES_USER}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    logging:
+      driver: json-file
+      options:
+        max-file: "5"
+        max-size: "10m"
+
+  jellystat:
+    image: ghcr.io/jellystat/jellystat-api-core:latest
+    container_name: jellystat
+    restart: unless-stopped
+    env_file: .env
+    environment:
+      DB_HOST: jellystat-db
+      DB_PORT: 5432
+    volumes:
+      - jellystat-backups:/app/backups
+    ports:
+      - "3000:8080"
+    depends_on:
+      jellystat-db:
+        condition: service_healthy
+    logging:
+      driver: json-file
+      options:
+        max-file: "5"
+        max-size: "10m"
+
+volumes:
+  jellystat-db:
+  jellystat-backups:

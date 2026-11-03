@@ -1,0 +1,68 @@
+name: Bug report
+description: Something in Jellystat isn't working as expected.
+labels: ["bug", "triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to report this. Please search [existing issues](https://github.com/JellyStat/Jellystat/issues) first.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Where does it happen?
+      description: Pick your best guess. We'll move it if needed.
+      options:
+        - Web UI (pages, charts, layout)
+        - API / background tasks (sync, backups, reports)
+        - Install / Docker
+        - Not sure
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What did you expect, and what happened instead?
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. Go to ...
+        2. Click ...
+        3. See ...
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Jellystat version
+      description: Shown in Settings, or the Docker image tag you're running.
+    validations:
+      required: true
+  - type: dropdown
+    id: server
+    attributes:
+      label: Media server
+      options:
+        - Jellyfin
+        - Emby
+    validations:
+      required: true
+  - type: input
+    id: server-version
+    attributes:
+      label: Media server version
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and OS
+      description: Only needed for UI problems.
+  - type: textarea
+    id: logs
+    attributes:
+      label: Logs
+      description: Relevant output from `docker logs jellystat`. Remove anything private (API keys, IPs, usernames).
+      render: shell
