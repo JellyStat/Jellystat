@@ -30,7 +30,29 @@ Jellystat runs as a single Docker container next to a PostgreSQL database.
 
 4. Open `http://<your-server>:3000` and follow the setup wizard to connect your Jellyfin or Emby server.
 
-Every setting is listed in [docs/configuration.md](docs/configuration.md).
+Every setting is listed in [Environment Variables](#environment-variables) below.
+
+## Environment Variables
+
+| Env | Default | Example | Description |
+|---|---|---|---|
+| DB_HOST `REQUIRED` | `null` | `jellystat-db` or `192.168.0.5` | Hostname/IP of the PostgreSQL server. The compose file sets this to `jellystat-db` |
+| DB_PORT | `5432` | `5432` | Port PostgreSQL is running on |
+| DB_NAME | `jellystat` | `jellystat` | Name of the PostgreSQL database |
+| DB_USERNAME `REQUIRED` | `null` | `jellystat` | Username used to connect to the database |
+| DB_PASSWORD `REQUIRED` | `null` | `my-db-password` | Password used to connect to the database |
+| JWT_KEY | random | `openssl rand -base64 48` | Key used to sign sign-in tokens. Must be at least 32 characters. If it isn't set, a new random key is generated on every start and everyone has to sign in again after a restart |
+| TZ | `Etc/UTC` | `Europe/Paris` | Server timezone (see the [tz database list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)) |
+| UI_URI | `null` | `https://ui.example.com` | Origin allowed to call the API from a browser (CORS). Only needed if you host the UI separately from the API |
+| ALLOW_UNAUTHENTICATED_PASSWORD_RESET | `false` | `true` | Recovery mode for a locked-out admin. While it's on, **anyone who can reach Jellystat can reset local user passwords**. Turn it on, recover access, then turn it off and restart |
+| MINIMUM_SECONDS_TO_INCLUDE_PLAYBACK | `1` | `10` | The minimum time (in seconds) to include a playback record, which can be used to exclude short playbacks |
+| NEW_WATCH_EVENT_THRESHOLD_HOURS | `1` | `1-12` | The max time between watch sessions before a new session is created. A watch of the same item within this many hours is added onto the last session; after it, a new watch event is recorded |
+| COMPLETION_THRESHOLD_PERCENTAGE | `90` | `95` | Percentage of an item that must be played for it to count as completed |
+| JS_GEOLITE_ACCOUNT_ID | `null` | `123456` | [maxmind.com](https://www.maxmind.com/en/accounts/current/edit) account ID used for geolocating IP addresses |
+| JS_GEOLITE_LICENSE_KEY | `null` | `ASDWdaSdawe2sd186` | License key you generate on MaxMind to use their geolocation service |
+| REPORTS_MAX_ROWS | `10000` | `50000` | Maximum number of rows a single report can return |
+
+The container listens on port `8080`. Mount a volume at `/app/backups` so backup files survive container updates.
 
 ## Getting help
 
