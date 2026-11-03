@@ -21,7 +21,16 @@
 - **Geolocation:** optional IP geolocation through MaxMind GeoLite.
 - **Translations:** the UI is translatable. See [Translating](#translating).
 
-## Quick start
+## Installation
+
+Jellystat is supported on these platforms. Both need a PostgreSQL database.
+
+| Platform | How it's installed | Where to get it |
+|---|---|---|
+| [Docker](#docker) | Container image, set up with Docker Compose | `ghcr.io/jellystat/jellystat-api-core` |
+| [Windows](#windows) | Installer that sets Jellystat up as a Windows service | `Jellystat-Setup-x.x.x.x.exe` from the [JellyStat-API-Core releases](https://github.com/JellyStat/JellyStat-API-Core/releases) |
+
+### Docker
 
 Jellystat runs as a single Docker container next to a PostgreSQL database.
 
@@ -37,6 +46,15 @@ Jellystat runs as a single Docker container next to a PostgreSQL database.
 
 Every setting is listed in [Environment Variables](#environment-variables) below.
 
+### Windows
+
+Jellystat runs natively on Windows as a service. The installer, `Jellystat-Setup-x.x.x.x.exe`, is attached to each [JellyStat-API-Core release](https://github.com/JellyStat/JellyStat-API-Core/releases).
+
+1. Install [PostgreSQL](https://www.postgresql.org/download/windows/) if you don't already have a server you can use.
+2. Download `Jellystat-Setup-x.x.x.x.exe` from the [latest release](https://github.com/JellyStat/JellyStat-API-Core/releases/latest) and run it.
+3. Enter your PostgreSQL details and the web port when the installer asks. They're saved to `jellystat.json` in the install folder.
+4. Jellystat is installed as a Windows service and starts automatically. Open `http://<your-server>:<port>` and follow the setup wizard.
+
 ## Migrating from v1
 
 > [!WARNING]
@@ -45,7 +63,7 @@ Every setting is listed in [Environment Variables](#environment-variables) below
 > Jellystat 2 uses a new database. Don't point it at your v1 database: install it alongside v1 and import a v1 backup, as below. Your v1 install isn't changed, so you can keep it until you're happy with v2.
 
 1. **Back up v1.** In your v1 Jellystat, go to **Settings → Backup**, create a new backup and download the file (`.jsonl`, or `.json` from older versions).
-2. **Install Jellystat 2** with the [Quick start](#quick-start) steps. Use a new database, not the v1 one.
+2. **Install Jellystat 2** with the [Installation](#installation) steps for your platform. Use a new database, not the v1 one.
 3. **Connect the same media server.** Run the setup wizard and add the same Jellyfin or Emby server that v1 was tracking. Imported history is matched by server ID, so it has to be the same server, not a copy.
 4. **Restore the backup.** In Jellystat 2, go to **Settings → Backups**, click **Upload** and pick the v1 file. Then click **Restore** on it and type `restore` to confirm.
 5. **Check the result.** The restore shows up in the task logs with the number of rows imported. Run a **full sync** if your libraries and users aren't there yet, so the imported history links up to them.
@@ -53,6 +71,8 @@ Every setting is listed in [Environment Variables](#environment-variables) below
 History entries from v1 that have no server ID, or belong to a server you haven't added to Jellystat 2, are skipped. If several servers were tracked in v1, add all of them before restoring.
 
 ## Environment Variables
+
+With Docker, set these in your `.env` file. On Windows, the installer saves the database details and port to `jellystat.json` in the install folder, and you can set the others as system environment variables (restart the Jellystat service afterwards).
 
 | Env | Default | Example | Description |
 |---|---|---|---|
@@ -72,7 +92,7 @@ History entries from v1 that have no server ID, or belong to a server you haven'
 | JS_GEOLITE_LICENSE_KEY | `null` | `ASDWdaSdawe2sd186` | License key you generate on MaxMind to use their geolocation service |
 | REPORTS_MAX_ROWS | `10000` | `50000` | Maximum number of rows a single report can return |
 
-The container listens on port `8080`. Mount a volume at `/app/backups` so backup files survive container updates.
+With Docker, the container listens on port `8080`. Mount a volume at `/app/backups` so backup files survive container updates.
 
 ## Getting help
 
