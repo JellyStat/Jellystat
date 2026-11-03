@@ -3,12 +3,12 @@
 **Jellystat** is a free and open source statistics app for Jellyfin and Emby. It tracks live sessions, watch history, users and libraries, and turns them into statistics and reports.
 
 > [!IMPORTANT]
-> **This is the new home of Jellystat.** Jellystat 2 is a ground-up rewrite, and all development, releases, issues and discussions now happen here.
+> **This is the new home of Jellystat.** Jellystat v2 is a ground-up rewrite, and all development, releases, issues and discussions now happen here.
 >
 > The original Jellystat (v1) lives at **[CyferShepard/Jellystat](https://github.com/CyferShepard/Jellystat)**. It is no longer developed, but you can bring your watch history over. See [Migrating from v1](#migrating-from-v1).
 
 > [!NOTE]
-> Jellystat 2 is in active development, so expect changes before the first stable release.
+> Jellystat v2 is in active development, so expect changes before the first stable release.
 
 ## Features
 
@@ -82,15 +82,15 @@ The file contains your database password and JWT key, so only Administrators, SY
 > [!WARNING]
 > **Only your watch history (playback activity) moves from v1 to v2.** Users, libraries and items are synced fresh from your media server. Jellystat accounts, settings and API keys are not carried over, so you set those up again.
 >
-> Jellystat 2 uses a new database. Don't point it at your v1 database: install it alongside v1 and import a v1 backup, as below. Your v1 install isn't changed, so you can keep it until you're happy with v2.
+> Jellystat v2 uses a new database. Don't point it at your v1 database: install it alongside v1 and import a v1 backup, as below. Your v1 install isn't changed, so you can keep it until you're happy with v2.
 
 1. **Back up v1.** In your v1 Jellystat, go to **Settings → Backup**, create a new backup and download the file (`.jsonl`, or `.json` from older versions).
-2. **Install Jellystat 2** with the [Installation](#installation) steps for your platform. Use a new database, not the v1 one.
+2. **Install Jellystat v2** with the [Installation](#installation) steps for your platform. Use a new database, not the v1 one.
 3. **Connect the same media server.** Run the setup wizard and add the same Jellyfin or Emby server that v1 was tracking. Imported history is matched by server ID, so it has to be the same server, not a copy.
-4. **Restore the backup.** In Jellystat 2, go to **Settings → Backups**, click **Upload** and pick the v1 file. Then click **Restore** on it and type `restore` to confirm.
+4. **Restore the backup.** In Jellystat v2, go to **Settings → Backups**, click **Upload** and pick the v1 file. Then click **Restore** on it and type `restore` to confirm.
 5. **Check the result.** The restore shows up in the task logs with the number of rows imported. Run a **full sync** if your libraries and users aren't there yet, so the imported history links up to them.
 
-History entries from v1 that have no server ID, or belong to a server you haven't added to Jellystat 2, are skipped. If several servers were tracked in v1, add all of them before restoring.
+History entries from v1 that have no server ID, or belong to a server you haven't added to Jellystat v2, are skipped. If several servers were tracked in v1, add all of them before restoring.
 
 ## Environment Variables
 
@@ -124,7 +124,7 @@ With Docker, the container listens on port `8080`. Mount a volume at `/app/backu
 
 ## Project structure
 
-Jellystat 2 is split across a few repositories in the [JellyStat organisation](https://github.com/JellyStat):
+Jellystat v2 is split across a few repositories in the [JellyStat organisation](https://github.com/JellyStat):
 
 | Repository | What it is |
 |---|---|
