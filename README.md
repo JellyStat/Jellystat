@@ -52,8 +52,30 @@ Jellystat runs natively on Windows as a service. The installer, `Jellystat-Setup
 
 1. Install [PostgreSQL](https://www.postgresql.org/download/windows/) if you don't already have a server you can use.
 2. Download `Jellystat-Setup-x.x.x.x.exe` from the [latest release](https://github.com/JellyStat/JellyStat-API-Core/releases/latest) and run it.
-3. Enter your PostgreSQL details and the web port when the installer asks. They're saved to `jellystat.json` in the install folder.
+3. Enter your PostgreSQL details and the web port when the installer asks. The installer also generates a `JWT_KEY`, and saves everything to `jellystat.json` in the install folder (`C:\Program Files\Jellystat` by default).
 4. Jellystat is installed as a Windows service and starts automatically. Open `http://<your-server>:<port>` and follow the setup wizard.
+
+Upgrading with a newer installer keeps your existing `jellystat.json`. Uninstalling removes the service but leaves `jellystat.json` and the `backups` folder behind.
+
+#### Settings on Windows
+
+Any [environment variable](#environment-variables) can be set in `jellystat.json`, using the variable name as the key. A fresh install writes a file like this:
+
+```json
+{
+  "DB_HOST": "localhost",
+  "DB_PORT": "5432",
+  "DB_NAME": "jellystat",
+  "DB_USERNAME": "postgres",
+  "DB_PASSWORD": "my-db-password",
+  "JWT_KEY": "generated-by-the-installer",
+  "Urls": "http://*:3000"
+}
+```
+
+`Urls` sets the port Jellystat listens on. You can also set any of these as system environment variables, and those take priority over `jellystat.json`. Restart the **Jellystat** service after changing either.
+
+The file contains your database password and JWT key, so only Administrators, SYSTEM and the Jellystat service account can read it. Edit it from an elevated editor.
 
 ## Migrating from v1
 
@@ -72,7 +94,7 @@ History entries from v1 that have no server ID, or belong to a server you haven'
 
 ## Environment Variables
 
-With Docker, set these in your `.env` file. On Windows, the installer saves the database details and port to `jellystat.json` in the install folder, and you can set the others as system environment variables (restart the Jellystat service afterwards).
+With Docker, set these in your `.env` file. On Windows, set them in `jellystat.json` or as system environment variables. See [Settings on Windows](#settings-on-windows).
 
 | Env | Default | Example | Description |
 |---|---|---|---|
@@ -82,7 +104,7 @@ With Docker, set these in your `.env` file. On Windows, the installer saves the 
 | DB_USERNAME `REQUIRED` | `null` | `jellystat` | Username used to connect to the database |
 | DB_PASSWORD `REQUIRED` | `null` | `my-db-password` | Password used to connect to the database |
 | JWT_KEY | random | `openssl rand -base64 48` | Key used to sign sign-in tokens. Must be at least 32 characters. If it isn't set, a new random key is generated on every start and everyone has to sign in again after a restart |
-| TZ | `Etc/UTC` | `Europe/Paris` | Server timezone (see the [tz database list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)) |
+| TZ | `Etc/UTC` | `Europe/Paris` | Server timezone (see the [tz database list](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones#List)). Docker only: on Windows, Jellystat uses the system timezone |
 | UI_URI | `null` | `https://ui.example.com` | Origin allowed to call the API from a browser (CORS). Only needed if you host the UI separately from the API |
 | ALLOW_UNAUTHENTICATED_PASSWORD_RESET | `false` | `true` | Recovery mode for a locked-out admin. While it's on, **anyone who can reach Jellystat can reset local user passwords**. Turn it on, recover access, then turn it off and restart |
 | MINIMUM_SECONDS_TO_INCLUDE_PLAYBACK | `1` | `10` | The minimum time (in seconds) to include a playback record, which can be used to exclude short playbacks |
