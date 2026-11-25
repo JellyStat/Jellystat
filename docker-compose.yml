@@ -23,6 +23,7 @@ services:
 
   jellystat:
     image: ghcr.io/jellystat/jellystat-api-core:latest
+    user: app
     container_name: jellystat
     restart: unless-stopped
     env_file: .env
